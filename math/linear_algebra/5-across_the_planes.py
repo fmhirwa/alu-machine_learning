@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
+""" Documentation"""
 
-'''
-    This script contains a function that adds matrices element wise.
-'''
+
 
 def add_matrices2D(mat1, mat2):
-    '''
+    """
         This function adds matrices element wise.
         mat1: The first matrix
         mat2: The second matrix
         Returns: A new matrix and None if the matrices are not of the same shape.
-    '''
+    """
     if len(mat1) != len(mat2):
         return None
 
