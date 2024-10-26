@@ -5,54 +5,33 @@
 
 import requests
 import sys
-import time
 from datetime import datetime
 
-import requests
-from datetime import datetime
-
-def get_upcoming_launch():
+def get_user_location(user_url):
     """
-    Retrieves and displays the upcoming SpaceX launch details.
+    Retrieves and prints the location of a specific GitHub user.
 
-    Prints:
-        The launch name, date (local time), rocket name, and launchpad name with locality.
+    Args:
+        user_url (str): Full API URL of the GitHub user.
 
-    Format:
-        <launch name> (<date>) <rocket name> - <launchpad name> (<launchpad locality>)
+    Returns:
+        None
     """
-    url = "https://api.spacexdata.com/v4/launches/upcoming"
-    response = requests.get(url)
-    
+    response = requests.get(user_url)
     if response.status_code == 200:
-        launches = response.json()
-        # Sort launches by date_unix to get the soonest launch
-        next_launch = min(launches, key=lambda launch: launch['date_unix'])
-        
-        # Extract and format the launch details
-        launch_name = next_launch.get("name", "Unknown launch")
-        launch_date = datetime.fromtimestamp(next_launch["date_unix"]).strftime("%Y-%m-%d %H:%M:%S")
-        rocket_id = next_launch["rocket"]
-        launchpad_id = next_launch["launchpad"]
-        
-        # Fetch rocket name
-        rocket_response = requests.get(f"https://api.spacexdata.com/v4/rockets/{rocket_id}")
-        rocket_name = rocket_response.json().get("name", "Unknown rocket") if rocket_response.status_code == 200 else "Unknown rocket"
-        
-        # Fetch launchpad details
-        launchpad_response = requests.get(f"https://api.spacexdata.com/v4/launchpads/{launchpad_id}")
-        if launchpad_response.status_code == 200:
-            launchpad_data = launchpad_response.json()
-            launchpad_name = launchpad_data.get("name", "Unknown launchpad")
-            launchpad_locality = launchpad_data.get("locality", "Unknown locality")
-        else:
-            launchpad_name = "Unknown launchpad"
-            launchpad_locality = "Unknown locality"
-        
-        # Print the formatted launch information
-        print(f"{launch_name} ({launch_date}) {rocket_name} - {launchpad_name} ({launchpad_locality})")
+        user_data = response.json()
+        print(user_data.get("location", "Location not specified"))
+    elif response.status_code == 404:
+        print("Not found")
+    elif response.status_code == 403:
+        reset_time = datetime.fromtimestamp(int(response.headers.get("X-Ratelimit-Reset", 0)))
+        minutes_until_reset = (reset_time - datetime.now()).total_seconds() // 60
+        print("Reset in {} min".format(int(minutes_until_reset)))
     else:
-        print("Unable to retrieve SpaceX launch information.")
+        print("Unexpected error")
 
 if __name__ == "__main__":
-    get_upcoming_launch()
+    if len(sys.argv) != 2:
+        print("Usage: ./2-user_location.py <GitHub user API URL>")
+    else:
+        get_user_location(sys.argv[1])
