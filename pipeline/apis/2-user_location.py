@@ -5,33 +5,21 @@
 
 import requests
 import sys
-from datetime import datetime
+import time
 
-def get_user_location(user_url):
-    """
-    Retrieves and prints the location of a specific GitHub user.
-
-    Args:
-        user_url (str): Full API URL of the GitHub user.
-
-    Returns:
-        None
-    """
-    response = requests.get(user_url)
-    if response.status_code == 200:
-        user_data = response.json()
-        print(user_data.get("location", "Location not specified"))
-    elif response.status_code == 404:
-        print("Not found")
-    elif response.status_code == 403:
-        reset_time = datetime.fromtimestamp(int(response.headers.get("X-Ratelimit-Reset", 0)))
-        minutes_until_reset = (reset_time - datetime.now()).total_seconds() // 60
-        print("Reset in {} min".format(int(minutes_until_reset)))
-    else:
-        print("Unexpected error")
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: ./2-user_location.py <GitHub user API URL>")
-    else:
-        get_user_location(sys.argv[1])
+    res = requests.get(sys.argv[1])
+
+    if res.status_code == 403:
+        rate_limit = int(res.headers.get('X-Ratelimit-Reset'))
+        current_time = int(time.time())
+        diff = (rate_limit - current_time) // 60
+        print("Reset in {} min".format(diff))
+        # get remaining rate
+
+    elif res.status_code == 404:
+        print("Not found")
+    elif res.status_code == 200:
+        res = res.json()
+        print(res['location'])
