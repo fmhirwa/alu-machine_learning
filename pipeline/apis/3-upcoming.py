@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 """
 Module to get information about the next SpaceX launch.
 """
@@ -7,6 +8,7 @@ import requests
 from datetime import datetime
 
 def get_upcoming_launch():
+
     """
     Retrieves and displays the upcoming SpaceX launch details.
 
@@ -16,6 +18,7 @@ def get_upcoming_launch():
     Format:
         <launch name> (<date>) <rocket name> - <launchpad name> (<launchpad locality>)
     """
+    
     url = "https://api.spacexdata.com/v4/launches/upcoming"
     response = requests.get(url)
     

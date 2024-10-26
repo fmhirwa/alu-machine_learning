@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 """
 Module to count the number of SpaceX launches per rocket.
 """
@@ -7,6 +8,7 @@ import requests
 from collections import defaultdict
 
 def get_launches_per_rocket():
+
     """
     Retrieves and displays the number of launches per SpaceX rocket.
 
@@ -15,6 +17,7 @@ def get_launches_per_rocket():
 
     Results are sorted by launch count (descending), and alphabetically for ties.
     """
+    
     launches_url = "https://api.spacexdata.com/v4/launches"
     rockets_url = "https://api.spacexdata.com/v4/rockets"
 

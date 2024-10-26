@@ -8,6 +8,7 @@ import sys
 from datetime import datetime
 
 def get_user_location(user_url):
+
     """
     Retrieves and prints the location of a specific GitHub user.
 
@@ -17,6 +18,7 @@ def get_user_location(user_url):
     Returns:
         None
     """
+    
     response = requests.get(user_url)
     if response.status_code == 200:
         user_data = response.json()
