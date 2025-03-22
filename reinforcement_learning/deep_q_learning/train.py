@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""" Train """
+""" Train.py for intra + Deep Q"""
 
 import gym
 import numpy as np

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""" Play """
+""" Play.py for intra + Deep Q """
 
 import gym
 import numpy as np
